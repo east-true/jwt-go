@@ -1,7 +1,7 @@
-package claims_test
+package main_test
 
 import (
-	. "jwt/claims"
+	. "jwt-go"
 	"testing"
 )
 

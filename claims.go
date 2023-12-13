@@ -1,34 +1,34 @@
-package claims
+package main
 
 import (
 	"fmt"
 	"time"
 
-	gojwt "github.com/golang-jwt/jwt/v5"
+	jwt "github.com/golang-jwt/jwt/v5"
 )
 
 var secret []byte = []byte("secret")
 
 type Claims struct {
 	Role string `json:"role"`
-	gojwt.RegisteredClaims
+	jwt.RegisteredClaims
 }
 
 func New(id, sub, iss, role string) *Claims {
 	return &Claims{
 		Role: role,
-		RegisteredClaims: gojwt.RegisteredClaims{
+		RegisteredClaims: jwt.RegisteredClaims{
 			ID:        id,
 			Subject:   sub,
 			Issuer:    iss,
-			IssuedAt:  gojwt.NewNumericDate(time.Now()),
-			ExpiresAt: gojwt.NewNumericDate(time.Now().Add(time.Hour * 24 * 30)),
+			IssuedAt:  jwt.NewNumericDate(time.Now()),
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 24 * 30)),
 		},
 	}
 }
 
 func (c *Claims) NewToken() string {
-	token := gojwt.NewWithClaims(gojwt.SigningMethodHS256, c)
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, c)
 	signedToken, err := token.SignedString(secret)
 	if err != nil {
 		fmt.Println(err)
@@ -39,21 +39,21 @@ func (c *Claims) NewToken() string {
 }
 
 func (c *Claims) Verify(token string) bool {
-	jwtToken, err := gojwt.ParseWithClaims(token, c, func(t *gojwt.Token) (interface{}, error) {
-		if _, ok := t.Method.(*gojwt.SigningMethodHMAC); ok {
+	jwtToken, err := jwt.ParseWithClaims(token, c, func(t *jwt.Token) (interface{}, error) {
+		if _, ok := t.Method.(*jwt.SigningMethodHMAC); ok {
 			return []byte(secret), nil
 		}
 
 		exp, err := t.Claims.GetExpirationTime()
 		if err != nil {
-			return nil, gojwt.ErrTokenInvalidClaims
+			return nil, jwt.ErrTokenInvalidClaims
 		}
 
 		if exp.After(time.Now()) {
-			return nil, gojwt.ErrTokenExpired
+			return nil, jwt.ErrTokenExpired
 		}
 
-		return nil, gojwt.ErrInvalidKeyType
+		return nil, jwt.ErrInvalidKeyType
 	})
 
 	if err != nil {
