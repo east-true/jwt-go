@@ -1,8 +1,9 @@
 package main_test
 
 import (
-	. "jwt-go"
 	"testing"
+
+	. "github.com/east-true/jwt-go"
 )
 
 func TestNewToken(t *testing.T) {
