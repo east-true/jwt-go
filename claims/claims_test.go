@@ -1,12 +1,12 @@
-package jwt_test
+package claims_test
 
 import (
-	"jwt"
+	. "jwt/claims"
 	"testing"
 )
 
 func TestNewToken(t *testing.T) {
-	claims := jwt.NewClaims("auth_token", "test", "boardsvr", "admin")
+	claims := New("auth_token", "test", "boardsvr", "admin")
 	token := claims.NewToken()
 	if token == "" {
 		t.Fail()
@@ -14,13 +14,13 @@ func TestNewToken(t *testing.T) {
 }
 
 func TestVerify(t *testing.T) {
-	claims := jwt.NewClaims("auth_token", "test", "boardsvr", "admin")
+	claims := New("auth_token", "test", "boardsvr", "admin")
 	token := claims.NewToken()
 	if token == "" {
 		t.Fail()
 	}
 
-	newClaims := new(jwt.Claims)
+	newClaims := new(Claims)
 	if !newClaims.Verify(token) {
 		t.Fail()
 	}

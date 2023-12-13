@@ -1,4 +1,4 @@
-package jwt
+package claims
 
 import (
 	"fmt"
@@ -14,7 +14,7 @@ type Claims struct {
 	gojwt.RegisteredClaims
 }
 
-func NewClaims(id, sub, iss, role string) *Claims {
+func New(id, sub, iss, role string) *Claims {
 	return &Claims{
 		Role: role,
 		RegisteredClaims: gojwt.RegisteredClaims{
