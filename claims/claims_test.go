@@ -1,9 +1,9 @@
-package main_test
+package claims_test
 
 import (
 	"testing"
 
-	. "github.com/east-true/jwt-go"
+	. "github.com/east-true/jwt-go/claims"
 )
 
 func TestNewToken(t *testing.T) {
